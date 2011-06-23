@@ -70,7 +70,7 @@ var encode = function(latitude, longitude, numberOfChars){
     return chars.join('')
 };
 
-var decode = function(hash_string){
+var decode_bbox = function(hash_string){
     var islon = true;
     var maxlat = 90, minlat = -90;
     var maxlon = 180, minlon = -180;
@@ -100,15 +100,39 @@ var decode = function(hash_string){
             islon = !islon;
         }
     }
+    return [minlat, minlon, maxlat, maxlon];
+}
 
-    var lat = (maxlat+minlat)/2;
-    var lon = (maxlon+minlon)/2;
-    return {latitude:lat, longitude:lon};
+var decode = function(hash_string){
+    var bbox = decode_bbox(hash_string);
+    var lat = (bbox[0]+bbox[2])/2;
+    var lon = (bbox[1]+bbox[3])/2;
+    var laterr = bbox[2]-lat;
+    var lonerr = bbox[3]-lon;
+    return {latitude:lat, longitude:lon, 
+        error:{latitude:laterr, longitude:lonerr}};
 };
+
+/**
+ * direction [lat, lon], i.e.
+ * [1,0] - north
+ * [1,1] - northeast
+ * ...
+ */
+var neighbor = function(hashstring, direction) {
+    var lonlat = decode(hashstring);
+    var neighbor_lat = lonlat.latitude 
+        + direction[0] * lonlat.error.latitude * 2;
+    var neighbor_lon = lonlat.longitude 
+        + direction[1] * lonlat.error.longitude * 2;
+    return encode(neighbor_lat, neighbor_lon, hashstring.length);
+}
 
 var geohash = {
     'encode': encode,
     'decode': decode,
+    'decode_bbox': decode_bbox,
+    'neighbor': neighbor,
 }
 module.exports = geohash;
 

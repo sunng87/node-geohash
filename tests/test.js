@@ -11,3 +11,9 @@ var latlon = geohash.decode('ww8p1r4t8');
 assert.ok(Math.abs(37.8324-latlon.latitude) < 0.0001);
 assert.ok(Math.abs(112.5584-latlon.longitude) < 0.0001 );
 
+var north =  geohash.neighbor('dqcjq', [1,0]);
+assert.equal(north, 'dqcjw');
+
+var southwest = geohash.neighbor('dqcjq', [-1,-1]);
+assert.equal(southwest, 'dqcjj');
+
