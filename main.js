@@ -77,7 +77,7 @@ var decode_bbox = function(hash_string){
 
     var hash_value = 0;
     for(var i=0,l=hash_string.length; i<l; i++) {
-        var code = hash_string[i];
+        var code = hash_string[i].toLowerCase();
         hash_value = BASE32_CODES_DICT[code];
 
         for (var bits=4; bits>=0; bits--) {

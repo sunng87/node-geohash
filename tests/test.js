@@ -14,6 +14,6 @@ assert.ok(Math.abs(112.5584-latlon.longitude) < 0.0001 );
 var north =  geohash.neighbor('dqcjq', [1,0]);
 assert.equal(north, 'dqcjw');
 
-var southwest = geohash.neighbor('dqcjq', [-1,-1]);
+var southwest = geohash.neighbor('DQCJQ', [-1,-1]);
 assert.equal(southwest, 'dqcjj');
 
