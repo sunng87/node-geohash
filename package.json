@@ -1,6 +1,6 @@
 {
   "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
-  "name": "geohash",
+  "name": "ngeohash",
   "description": "geohash library for nodejs",
   "version": "0.1.0",
   "repository": {
