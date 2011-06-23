@@ -3,6 +3,11 @@ node-geohash
 
 Geohash library for nodejs.
 
+Install
+-------
+
+    npm install ngeohash
+
 Usage
 -----
 
