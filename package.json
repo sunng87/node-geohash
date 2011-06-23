@@ -2,7 +2,7 @@
   "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
   "name": "ngeohash",
   "description": "geohash library for nodejs",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "repository": {
     "url": "https://github.com/sunng87/node-geohash"
   },
