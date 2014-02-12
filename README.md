@@ -5,18 +5,20 @@ Geohash library for nodejs.
 
 Install
 -------
-
-    npm install ngeohash
+```bash
+$ npm install ngeohash
+```
 
 Usage
------
-
-    var geohash = require('geohash');
-    sys.puts(geohash.encode(37.8324, 112.5584));
-    // prints ww8p1r4t8
-    var latlon = geohash.decode('ww8p1r4t8');
-    sys.puts(latlon.latitude);
-    sys.puts(latlon.longitude);
+-------
+```js
+var geohash = require('geohash');
+sys.puts(geohash.encode(37.8324, 112.5584));
+// prints ww8p1r4t8
+var latlon = geohash.decode('ww8p1r4t8');
+sys.puts(latlon.latitude);
+sys.puts(latlon.longitude);
+```
 
 ### geohash.encode (latitude, longitude, precision=9)
 
