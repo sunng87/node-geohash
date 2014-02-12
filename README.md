@@ -11,12 +11,12 @@ Install
 Usage
 -----
 
-    var geohash = require('geohash');
-    sys.puts(geohash.encode(37.8324, 112.5584));
+    var geohash = require('ngeohash');
+    console.log(geohash.encode(37.8324, 112.5584));
     // prints ww8p1r4t8
     var latlon = geohash.decode('ww8p1r4t8');
-    sys.puts(latlon.latitude);
-    sys.puts(latlon.longitude);
+    console.log(latlon.latitude);
+    console.log(latlon.longitude);
 
 ### geohash.encode (latitude, longitude, precision=9)
 
