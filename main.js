@@ -128,11 +128,44 @@ var neighbor = function(hashstring, direction) {
     return encode(neighbor_lat, neighbor_lon, hashstring.length);
 }
 
+
+/**
+ * return all the hashstring between minLat, minLon, maxLat, maxLon in numberOfChars
+ */
+
+var bboxes = function(minLat, minLon, maxLat, maxLon, numberOfChars){
+    var hashSouthWest = encode(minLat, minLon, numberOfChars);
+    var hashNorthEast = encode(maxLat, maxLon, numberOfChars);
+
+    var latlon = decode(hashSouthWest);
+
+    var perLat = latlon.error.latitude * 2;
+    var perLon = latlon.error.longitude * 2;
+
+    var boxSouthWest = decode_bbox(hashSouthWest);
+    var boxNorthEast = decode_bbox(hashNorthEast);
+
+    var latStep = Math.round((boxNorthEast[0] - boxSouthWest[0])/perLat);
+    var lonStep = Math.round((boxNorthEast[1] - boxSouthWest[1])/perLon);
+    
+    var hashList = [];
+
+    for(var lat = 0; lat <= latStep; lat++){
+        for(var lon = 0; lon <= lonStep; lon++){
+            hashList.push(neighbor(hashSouthWest,[lat, lon]));
+        }
+    }
+
+    return hashList;
+}
+
 var geohash = {
     'encode': encode,
     'decode': decode,
     'decode_bbox': decode_bbox,
     'neighbor': neighbor,
+    'bboxes': bboxes,
 }
+
 module.exports = geohash;
 

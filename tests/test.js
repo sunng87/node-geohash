@@ -17,3 +17,5 @@ assert.equal(north, 'dqcjw');
 var southwest = geohash.neighbor('DQCJQ', [-1,-1]);
 assert.equal(southwest, 'dqcjj');
 
+var bboxes = geohash.bboxes(30, 120, 30.0001, 120.0001, 8);
+assert.equal(bboxes[bboxes.length-1], geohash.encode(30.0001, 120.0001, 8));
