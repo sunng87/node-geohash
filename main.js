@@ -134,6 +134,8 @@ var neighbor = function(hashstring, direction) {
  */
 
 var bboxes = function(minLat, minLon, maxLat, maxLon, numberOfChars){
+    numberOfChars = numberOfChars || 9;
+
     var hashSouthWest = encode(minLat, minLon, numberOfChars);
     var hashNorthEast = encode(maxLat, maxLon, numberOfChars);
 
