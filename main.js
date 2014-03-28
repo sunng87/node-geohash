@@ -38,8 +38,8 @@ var ENCODE_AUTO = 'auto';
  * length of the geohash.
  * @type Array
  */
-//     Desired sig figs:  0  1  2  3  4   5   6   7   8   9  10
-var SIGFIG_HASH_LENGTH = [0, 4, 6, 7, 8, 11, 12, 13, 15, 16, 17];
+//     Desired sig figs:  0  1  2  3  4   5   6   7   8   9   10
+var SIGFIG_HASH_LENGTH = [0, 4, 7, 8, 11, 12, 13, 15, 16, 17, 18];
 /**
  * Encode
  *
@@ -60,9 +60,10 @@ var encode = function(latitude, longitude, numberOfChars) {
 		//console.log('Hash Length: ' + numberOfChars);
 		//return;
 	}
+	else {
+		numberOfChars = numberOfChars || 9;
+	}
 	
-	numberOfChars = numberOfChars || 9;
-
 	var chars = [],
 			bits = 0,
 			bitsTotal = 0,
