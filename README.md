@@ -46,17 +46,19 @@ array: [hashstr1, hashstr2, ... ]
 
 ## uint64 methods
 
+Note that these are of course not actually uint64 numbers. They are just regular javascript floating point numbers, but the functionality should mimic other uint64 geohash functions in geohash libraries for other languages.
+
 ### geohash.encode_uint64 (latitude, longitude, bitDepth=52)
 
-Encode a pair of latitude and longitude values into a uint64 number geohash. The third argument is optional, you can specify the bit depth of this number, which affects the precision of the geohash but also must be used consistently when decoding. Bit depth must be even.
+Encode a pair of latitude and longitude values into a uint64-like number geohash. The third argument is optional, you can specify the bit depth of this number, which affects the precision of the geohash but also must be used consistently when decoding. Bit depth must be even.
 
 ### geohash.decode_uint64 (hashnumber, bitDepth=52)
 
-Decode a uint64 hashed number into pair of latitude and longitude values. A javascript object is returned with `latitude` and `longitude` keys. You must also provide the bitDepth at which to decode the number (ie. what bitDepth the number was originall produced with).
+Decode a uint64-like hashed number into pair of latitude and longitude values. A javascript object is returned with `latitude` and `longitude` keys. You must also provide the bitDepth at which to decode the number (ie. what bitDepth the number was originall produced with).
 
 ### geohash.decode_bbox_uint64 (hashnumber, bitDepth=52)
 
-Decode uint64 hash into a bounding box that matches it. Data is returned as a four-element array: `[minlat, minlon, maxlat, maxlon]`.
+Decode uint64-like hash into a bounding box that matches it. Data is returned as a four-element array: `[minlat, minlon, maxlat, maxlon]`.
 
 ## About Geohash
 
