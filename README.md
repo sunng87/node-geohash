@@ -69,3 +69,7 @@ Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") 
 * [Seth Miller](https://github.com/four43)
 * [Zhu Zhe](https://github.com/zhuzhe1983)
 * [Arjun Mehta](https://github.com/arjunmehta)
+
+## License
+
+node-geohash is open sourced under MIT License, of course.
