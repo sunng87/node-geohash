@@ -93,6 +93,9 @@ var encode = function(latitude, longitude, numberOfChars){
  * @returns {Number}
  */
 var encode_uint64 = function(latitude, longitude, bitDepth){
+	
+    bitDepth = bitDepth || 52;
+    
     var bitsTotal = 0,
         maxlat = 90, 
         minlat = -90,
@@ -174,6 +177,8 @@ var decode_bbox = function(hash_string){
  * @returns {Array}
  */
 var decode_bbox_uint64 = function(hash_int, bitDepth){
+
+    bitDepth = bitDepth || 52;
 
     var bitsTotal = 0;
     var maxlat = 90, minlat = -90;
