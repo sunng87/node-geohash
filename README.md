@@ -63,5 +63,9 @@ Decode uint64-like hash into a bounding box that matches it. Data is returned as
 ## About Geohash
 
 Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") for more information.
-    
 
+## Contributors
+
+* [Seth Miller](https://github.com/four43)
+* [Zhu Zhe](https://github.com/zhuzhe1983)
+* [Arjun Mehta](https://github.com/arjunmehta)

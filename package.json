@@ -1,6 +1,8 @@
 {
   "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
-  "contributors": ["Arjun Mehta <arjunmeht@gmail.com> (http://www.arjunmehta.net/)"],
+  "contributors": ["Arjun Mehta <arjunmeht@gmail.com> (http://www.arjunmehta.net/)",
+                   "Seth Miller",
+                   "Zhu Zhe <zhuzhe1983@gmail.com>"],
   "name": "ngeohash",
   "description": "geohash library for nodejs",
   "keywords": [
