@@ -39,9 +39,9 @@ Find the neighbor of a geohash string in certain direction. Direction is a two-e
 Decode hashstring into a bounding box that matches it. Data is returned as a four-element array: `[minlat, minlon, maxlat, maxlon]`.
 
 ### geohash.bboxes (minlat, minlon, maxlat, maxlon, precision=9)
-Get all hashstringes between [minlat, minlon] and [maxlat, maxlon]. These keys can be used to find a poi stored in the cache with hashstring keys. eg. show all points in the visible range of map
+Get all hashstringes between `[minlat, minlon]` and `[maxlat, maxlon]`. These keys can be used to find a poi stored in the cache with hashstring keys. eg. show all points in the visible range of map
 
-array: [hashstr1, hashstr2, ... ]
+array: `[hashstr1, hashstr2, ... ]`
 
 
 ## uint64 methods
@@ -50,11 +50,11 @@ Note that these are of course not actually uint64 numbers. They are just regular
 
 ### geohash.encode_uint64 (latitude, longitude, bitDepth=52)
 
-Encode a pair of latitude and longitude values into a uint64-like number geohash. The third argument is optional, you can specify the bit depth of this number, which affects the precision of the geohash but also must be used consistently when decoding. Bit depth must be even.
+Encode a pair of latitude and longitude values into a uint64-like number geohash. The third argument is optional, you can specify the `bitDepth` of this number, which affects the precision of the geohash but also must be used consistently when decoding. Bit depth must be even.
 
 ### geohash.decode_uint64 (hashnumber, bitDepth=52)
 
-Decode a uint64-like hashed number into pair of latitude and longitude values. A javascript object is returned with `latitude` and `longitude` keys. You must also provide the bitDepth at which to decode the number (ie. what bitDepth the number was originall produced with).
+Decode a uint64-like hashed number into pair of latitude and longitude values. A javascript object is returned with `latitude` and `longitude` keys. You should also provide the `bitDepth` at which to decode the number (ie. what bitDepth the number was originally produced with), but will default to 52.
 
 ### geohash.decode_bbox_uint64 (hashnumber, bitDepth=52)
 
