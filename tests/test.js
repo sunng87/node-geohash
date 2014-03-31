@@ -8,13 +8,13 @@ var hashstring = geohash.encode(37.8324, 112.5584, 9);
 assert.equal(hashstring, 'ww8p1r4t8');
 
 var hashstring_uint = geohash.encode_uint64(37.8324, 112.5584, 52);
-assert.equal(hashstring, 4064984913515641);
+assert.equal(hashstring_uint, 4064984913515641);
 
 var latlon = geohash.decode('ww8p1r4t8');
 assert.ok(Math.abs(37.8324-latlon.latitude) < 0.0001);
 assert.ok(Math.abs(112.5584-latlon.longitude) < 0.0001 );
 
-var latlon_uint = geohash.decode(4064984913515641);
+var latlon_uint = geohash.decode_uint64(4064984913515641);
 assert.ok(Math.abs(37.8324-latlon_uint.latitude) < 0.0001);
 assert.ok(Math.abs(112.5584-latlon_uint.longitude) < 0.0001 );
 
