@@ -1,5 +1,6 @@
 {
   "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
+  "contributors": ["Arjun Mehta <arjunmeht@gmail.com> (http://www.arjunmeht.net/)"],
   "name": "ngeohash",
   "description": "geohash library for nodejs",
   "keywords": [
@@ -9,7 +10,7 @@
     "geocode",
     "geolocation"
   ],
-  "version": "0.3.2",
+  "version": "0.4.0",
   "repository": {
     "url": "https://github.com/sunng87/node-geohash"
   },
