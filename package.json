@@ -2,6 +2,13 @@
   "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
   "name": "ngeohash",
   "description": "geohash library for nodejs",
+  "keywords": [
+    "geohash",
+    "uint64",
+    "geohasher",
+    "geocode",
+    "geolocation"
+  ],
   "version": "0.3.2",
   "repository": {
     "url": "https://github.com/sunng87/node-geohash"
