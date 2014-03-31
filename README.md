@@ -3,13 +3,13 @@ node-geohash
 
 Geohash library for nodejs.
 
-# Install
+## Install
 
 ```bash
 npm install ngeohash
 ```
 
-# Usage
+## Usage
 
 ```javascript
     var geohash = require('ngeohash');
@@ -58,7 +58,7 @@ Decode a uint64 hashed number into pair of latitude and longitude values. A java
 
 Decode uint64 hash into a bounding box that matches it. Data is returned as a four-element array: `[minlat, minlon, maxlat, maxlon]`.
 
-# About Geohash
+## About Geohash
 
 Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") for more information.
     
