@@ -39,7 +39,7 @@ var ENCODE_AUTO = 'auto';
  * @type Array
  */
 //     Desired sig figs:  0  1  2  3  4   5   6   7   8   9  10
-var SIGFIG_HASH_LENGTH = [0, 4, 7, 8, 11, 12, 13, 15, 16, 17, 18];
+var SIGFIG_HASH_LENGTH = [0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18];
 /**
  * Encode
  *
@@ -56,9 +56,6 @@ var encode = function (latitude, longitude, numberOfChars) {
         var decSigFigsLong = longitude.split('.')[1].length;
         var numberOfSigFigs = Math.max(decSigFigsLat, decSigFigsLong);
         numberOfChars = SIGFIG_HASH_LENGTH[numberOfSigFigs];
-        //console.log('SigFigs: ' + decSigFigsLat + ', ' + decSigFigsLong);
-        //console.log('Hash Length: ' + numberOfChars);
-        //return;
     }
     else {
         if (numberOfChars === undefined || numberOfChars === ENCODE_AUTO) {
@@ -123,30 +120,30 @@ var encode_uint64 = function (latitude, longitude, bitDepth) {
     bitDepth = bitDepth || 52;
 
     var bitsTotal = 0,
-        maxlat = 90,
-        minlat = -90,
-        maxlon = 180,
-        minlon = -180,
+        maxLat = 90,
+        minLat = -90,
+        maxLon = 180,
+        minLon = -180,
         mid,
         combinedBits = 0;
 
     while (bitsTotal < bitDepth) {
         combinedBits *= 2;
         if (bitsTotal % 2 === 0) {
-            mid = (maxlon + minlon) / 2;
+            mid = (maxLon + minLon) / 2;
             if (longitude > mid) {
                 combinedBits += 1;
-                minlon = mid;
+                minLon = mid;
             } else {
-                maxlon = mid;
+                maxLon = mid;
             }
         } else {
-            mid = (maxlat + minlat) / 2;
+            mid = (maxLat + minLat) / 2;
             if (latitude > mid) {
                 combinedBits += 1;
-                minlat = mid;
+                minLat = mid;
             } else {
-                maxlat = mid;
+                maxLat = mid;
             }
         }
         bitsTotal++;
@@ -157,7 +154,7 @@ var encode_uint64 = function (latitude, longitude, bitDepth) {
 /**
  * Decode Bounding Box
  *
- * Decode hashstring into a bound box matches it. Data returned in a four-element array: [minlat, minlon, maxlat, maxlon]
+ * Decode hashString into a bound box matches it. Data returned in a four-element array: [minlat, minlon, maxlat, maxlon]
  * @param {String} hash_string
  * @returns {Array}
  */
@@ -248,11 +245,11 @@ function get_bit(bits, position) {
  *
  * Decode a hash string into pair of latitude and longitude. A javascript object is returned with keys `latitude`,
  * `longitude` and `error`.
- * @param {String} hash_string
+ * @param {String} hashString
  * @returns {Object}
  */
-var decode = function (hash_string) {
-    var bbox = decode_bbox(hash_string);
+var decode = function (hashString) {
+    var bbox = decode_bbox(hashString);
     var lat = (bbox[0] + bbox[2]) / 2;
     var lon = (bbox[1] + bbox[3]) / 2;
     var latErr = bbox[2] - lat;
@@ -304,7 +301,7 @@ var neighbor = function (hashString, direction) {
 /**
  * Bounding Boxes
  *
- * Return all the hashstring between minLat, minLon, maxLat, maxLon in numberOfChars
+ * Return all the hashString between minLat, minLon, maxLat, maxLon in numberOfChars
  * @param {Number} minLat
  * @param {Number} minLon
  * @param {Number} maxLat
