@@ -1,27 +1,35 @@
 {
-  "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
-  "contributors": ["Arjun Mehta <arjunmeht@gmail.com> (http://www.arjunmehta.net/)",
-                   "Seth Miller",
-                   "Zhu Zhe <zhuzhe1983@gmail.com>"],
-  "name": "ngeohash",
-  "description": "geohash library for nodejs",
-  "keywords": [
-    "geohash",
-    "uint64",
-    "geohasher",
-    "geocode",
-    "geolocation"
-  ],
-  "version": "0.4.1",
-  "repository": {
-    "url": "https://github.com/sunng87/node-geohash"
-  },
-  "engines": {
-    "node": ">=v0.2.0"
-  },
-  "dependencies": {},
-  "devDependencies": {},
-  "main": "./main",
-  "license": "MIT",
-  "readmeFilename": "README.md"
+    "author": "Sun Ning <classicning@gmail.com> (http://sunng.info/)",
+    "contributors": [
+        "Arjun Mehta <arjunmeht@gmail.com> (http://www.arjunmehta.net/)",
+        "Seth Miller <seth@four43.com> (http://www.four43.com)",
+        "Zhu Zhe <zhuzhe1983@gmail.com>"
+    ],
+    "name": "ngeohash",
+    "description": "geohash library for nodejs",
+    "keywords": [
+        "geohash",
+        "uint64",
+        "geohasher",
+        "geocode",
+        "geolocation"
+    ],
+    "version": "0.4.1",
+    "repository": {
+        "url": "https://github.com/sunng87/node-geohash"
+    },
+    "engines": {
+        "node": ">=v0.2.0"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "assert": ">=1.0",
+        "nodeunit": ">=0.8"
+    },
+    "scripts": {
+        "test": "nodeunit tests/test.js"
+    },
+    "main": "./main",
+    "license": "MIT",
+    "readmeFilename": "README.md"
 }
