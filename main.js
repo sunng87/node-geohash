@@ -55,17 +55,13 @@ var SIGFIG_HASH_LENGTH = [0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18];
  * @returns {String}
  */
 var encode = function (latitude, longitude, numberOfChars) {
-  if (numberOfChars === ENCODE_AUTO &&
-      typeof latitude === 'string' &&
-      typeof longitude === 'string') {
-    var decSigFigsLat = latitude.split('.')[1].length;
-    var decSigFigsLong = longitude.split('.')[1].length;
+  if (numberOfChars === ENCODE_AUTO) {
+    var decSigFigsLat = latitude.toString().split('.')[1].length;
+    var decSigFigsLong = longitude.toString().split('.')[1].length;
     var numberOfSigFigs = Math.max(decSigFigsLat, decSigFigsLong);
     numberOfChars = SIGFIG_HASH_LENGTH[numberOfSigFigs];
-  } else {
-    if (numberOfChars === undefined || numberOfChars === ENCODE_AUTO) {
-      numberOfChars = 9;
-    }
+  } else if (numberOfChars === undefined) {
+    numberOfChars = 9;
   }
 
   var chars = [],

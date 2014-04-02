@@ -36,7 +36,7 @@ exports.testDecodeUIntBasic = function (test) {
 exports.teshEncodeAutoBasic = function (test) {
   //Simple Auto Test
   var hashString = geohash.encode(44.97, -93.26, geohash.ENCODE_AUTO);
-  test.equal(hashString, '9zvxvfd1h');
+  test.equal(hashString, '9zvxvfd');
 
   hashString = geohash.encode('44.97', '-93.26', geohash.ENCODE_AUTO);
   test.equal(hashString, '9zvxvfd');
