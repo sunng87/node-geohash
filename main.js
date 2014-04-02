@@ -56,8 +56,7 @@ var encode = function (latitude, longitude, numberOfChars) {
         var decSigFigsLong = longitude.split('.')[1].length;
         var numberOfSigFigs = Math.max(decSigFigsLat, decSigFigsLong);
         numberOfChars = SIGFIG_HASH_LENGTH[numberOfSigFigs];
-    }
-    else {
+    } else {
         if (numberOfChars === undefined || numberOfChars === ENCODE_AUTO) {
             numberOfChars = 9;
         }
