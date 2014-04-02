@@ -3,6 +3,8 @@ node-geohash
 
 Geohash library for nodejs.
 
+[![Build Status](https://travis-ci.org/sunng87/node-geohash.svg)](https://travis-ci.org/sunng87/node-geohash)
+
 ## Install
 
 ```bash
