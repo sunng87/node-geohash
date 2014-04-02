@@ -4,8 +4,10 @@ var assert = require('assert');
 var longitude = 112.5584;
 var latitude = 37.8324;
 
-var hashstring = geohash.encode(37.8324, 112.5584, 9);
+var hashstring = geohash.encode(37.8324, 112.5584);
 assert.equal(hashstring, 'ww8p1r4t8');
+var hashstring = geohash.encode(32, 117, 3);
+assert.equal(hashstring, 'wte');
 
 var hashstring_uint = geohash.encode_uint64(37.8324, 112.5584, 52);
 assert.equal(hashstring_uint, 4064984913515641);

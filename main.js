@@ -18,7 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- * 
+ *
  */
 
 var BASE32_CODES = "0123456789bcdefghjkmnpqrstuvwxyz";
@@ -29,26 +29,27 @@ for(var i=0; i<BASE32_CODES.length; i++) {
 
 /**
  * Encode
- * 
+ *
  * Create a Geohash out of a latitude and longitude that is `numberOfChars` long.
- * 
+ *
  * @param {Number} latitude
  * @param {Number} longitude
  * @param {Number} numberOfChars
  * @returns {String}
  */
 var encode = function(latitude, longitude, numberOfChars){
-    var chars = [], 
-		bits = 0,
-		bitsTotal = 0,
-		
-		hash_value = 0,
-		
-		maxlat = 90, 
-		minlat = -90,
-		maxlon = 180, 
-		minlon = -180,
-		mid;
+    var chars = [],
+    numberOfChars = numberOfChars || 9,
+    bits = 0,
+    bitsTotal = 0,
+
+    hash_value = 0,
+
+    maxlat = 90,
+    minlat = -90,
+    maxlon = 180,
+    minlon = -180,
+    mid;
     while(chars.length < numberOfChars) {
         if (bitsTotal % 2 === 0){
             mid = (maxlon+minlon)/2;
@@ -77,29 +78,29 @@ var encode = function(latitude, longitude, numberOfChars){
             chars.push(code);
             bits = 0;
             hash_value = 0;
-        } 
+        }
     }
     return chars.join('');
 };
 
 /**
  * Encode uint64
- * 
+ *
  * Create a Geohash out of a latitude and longitude that is of 'bitDepth'.
- * 
+ *
  * @param {Number} latitude
  * @param {Number} longitude
  * @param {Number} bitDepth
  * @returns {Number}
  */
 var encode_uint64 = function(latitude, longitude, bitDepth){
-	
+
     bitDepth = bitDepth || 52;
-    
+
     var bitsTotal = 0,
-        maxlat = 90, 
+        maxlat = 90,
         minlat = -90,
-        maxlon = 180, 
+        maxlon = 180,
         minlon = -180,
         mid,
         combinedBits = 0;
@@ -108,7 +109,7 @@ var encode_uint64 = function(latitude, longitude, bitDepth){
         combinedBits *= 2;
         if (bitsTotal % 2 === 0){
             mid = (maxlon+minlon)/2;
-            if(longitude > mid){                
+            if(longitude > mid){
                 combinedBits += 1;
                 minlon=mid;
             } else {
@@ -130,7 +131,7 @@ var encode_uint64 = function(latitude, longitude, bitDepth){
 
 /**
  * Decode Bounding Box
- * 
+ *
  * Decode hashstring into a bound box matches it. Data returned in a four-element array: [minlat, minlon, maxlat, maxlon]
  * @param {String} hash_string
  * @returns {Array}
@@ -170,7 +171,7 @@ var decode_bbox = function(hash_string){
 
 /**
  * Decode Bounding Box uint64
- * 
+ *
  * Decode hash number into a bound box matches it. Data returned in a four-element array: [minlat, minlon, maxlat, maxlon]
  * @param {Number} hash_int
  * @param {Number} bitDepth
@@ -215,8 +216,8 @@ function get_bit(bits, position){
 
 /**
  * Decode
- * 
- * Decode a hash string into pair of latitude and longitude. A javascript object is returned with keys `latitude`, 
+ *
+ * Decode a hash string into pair of latitude and longitude. A javascript object is returned with keys `latitude`,
  * `longitude` and `error`.
  * @param {String} hash_string
  * @returns {Object}
@@ -227,14 +228,14 @@ var decode = function(hash_string){
     var lon = (bbox[1]+bbox[3])/2;
     var laterr = bbox[2]-lat;
     var lonerr = bbox[3]-lon;
-    return {latitude:lat, longitude:lon, 
+    return {latitude:lat, longitude:lon,
         error:{latitude:laterr, longitude:lonerr}};
 };
 
 /**
  * Decode uint64
- * 
- * Decode a hash number into pair of latitude and longitude. A javascript object is returned with keys `latitude`, 
+ *
+ * Decode a hash number into pair of latitude and longitude. A javascript object is returned with keys `latitude`,
  * `longitude` and `error`.
  * @param {Number} hash_int
  * @param {Number} bitDepth
@@ -246,33 +247,33 @@ var decode_uint64 = function(hash_int, bitDepth){
     var lon = (bbox[1]+bbox[3])/2;
     var laterr = bbox[2]-lat;
     var lonerr = bbox[3]-lon;
-    return {latitude:lat, longitude:lon, 
+    return {latitude:lat, longitude:lon,
         error:{latitude:laterr, longitude:lonerr}};
 };
 
 /**
  * Neighbor
- * 
+ *
  * Find neighbor of a geohash string in certain direction. Direction is a two-element array, i.e. [1,0] means north, [-1,-1] means southwest.
  * direction [lat, lon], i.e.
  * [1,0] - north
  * [1,1] - northeast
  * ...
  * @param {String} hash_string
- * @returns {Array} 
+ * @returns {Array}
 */
 var neighbor = function(hashstring, direction) {
     var lonlat = decode(hashstring);
-    var neighbor_lat = lonlat.latitude 
+    var neighbor_lat = lonlat.latitude
         + direction[0] * lonlat.error.latitude * 2;
-    var neighbor_lon = lonlat.longitude 
+    var neighbor_lon = lonlat.longitude
         + direction[1] * lonlat.error.longitude * 2;
     return encode(neighbor_lat, neighbor_lon, hashstring.length);
 };
 
 /**
  * Bounding Boxes
- * 
+ *
  * Return all the hashstring between minLat, minLon, maxLat, maxLon in numberOfChars
  * @param {Number} minLat
  * @param {Number} minLon
@@ -297,7 +298,7 @@ var bboxes = function(minLat, minLon, maxLat, maxLon, numberOfChars){
 
     var latStep = Math.round((boxNorthEast[0] - boxSouthWest[0])/perLat);
     var lonStep = Math.round((boxNorthEast[1] - boxSouthWest[1])/perLon);
-    
+
     var hashList = [];
 
     for(var lat = 0; lat <= latStep; lat++){
@@ -313,7 +314,7 @@ var geohash = {
     'encode': encode,
     'encode_uint64': encode_uint64,
     'decode': decode,
-    'decode_uint64': decode_uint64,    
+    'decode_uint64': decode_uint64,
     'decode_bbox': decode_bbox,
     'decode_bbox_uint64': decode_bbox_uint64,
     'neighbor': neighbor,
