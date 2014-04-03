@@ -353,8 +353,8 @@ var neighbors = function(hash_string){
                             ];
 
     function encodeNeighbor(neighborLatDir, neighborLonDir){
-        neighbor_lat = lat + neighborLatDir * latErr * 2;
-        neighbor_lon = lon + neighborLonDir * lonErr * 2;
+        neighbor_lat = lat + neighborLatDir * latErr;
+        neighbor_lon = lon + neighborLonDir * lonErr;
         return encode(neighbor_lat, neighbor_lon, hashstringLength);
     }
 
@@ -397,8 +397,8 @@ var neighbors_int = function(hash_int, bitDepth){
                             ];
 
     function encodeNeighbor_int(neighborLatDir, neighborLonDir){
-        neighbor_lat = lat + neighborLatDir * latErr * 2;
-        neighbor_lon = lon + neighborLonDir * lonErr * 2;
+        neighbor_lat = lat + neighborLatDir * latErr;
+        neighbor_lon = lon + neighborLonDir * lonErr;
         return encode_int(neighbor_lat, neighbor_lon, bitDepth);
     }
 
