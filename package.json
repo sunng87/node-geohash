@@ -14,7 +14,7 @@
         "geocode",
         "geolocation"
     ],
-    "version": "0.4.1",
+    "version": "0.5.0",
     "repository": {
         "url": "https://github.com/sunng87/node-geohash"
     },
