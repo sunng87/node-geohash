@@ -107,7 +107,7 @@ var encode = function (latitude, longitude, numberOfChars) {
 };
 
 /**
- * Encode uint64
+ * Encode Integer
  *
  * Create a Geohash out of a latitude and longitude that is of 'bitDepth'.
  *
@@ -116,7 +116,7 @@ var encode = function (latitude, longitude, numberOfChars) {
  * @param {Number} bitDepth
  * @returns {Number}
  */
-var encode_uint64 = function (latitude, longitude, bitDepth) {
+var encode_int = function (latitude, longitude, bitDepth) {
 
   bitDepth = bitDepth || 52;
 
@@ -196,14 +196,14 @@ var decode_bbox = function (hash_string) {
 };
 
 /**
- * Decode Bounding Box uint64
+ * Decode Bounding Box Integer
  *
  * Decode hash number into a bound box matches it. Data returned in a four-element array: [minlat, minlon, maxlat, maxlon]
  * @param {Number} hashInt
  * @param {Number} bitDepth
  * @returns {Array}
  */
-var decode_bbox_uint64 = function (hashInt, bitDepth) {
+var decode_bbox_int = function (hashInt, bitDepth) {
 
   bitDepth = bitDepth || 52;
 
@@ -239,7 +239,7 @@ var decode_bbox_uint64 = function (hashInt, bitDepth) {
 
 function get_bit(bits, position) {
   return (bits / Math.pow(2, position)) & 0x01;
-};
+}
 
 /**
  * Decode
@@ -260,7 +260,7 @@ var decode = function (hashString) {
 };
 
 /**
- * Decode uint64
+ * Decode Integer
  *
  * Decode a hash number into pair of latitude and longitude. A javascript object is returned with keys `latitude`,
  * `longitude` and `error`.
@@ -268,8 +268,8 @@ var decode = function (hashString) {
  * @param {Number} bitDepth
  * @returns {Object}
  */
-var decode_uint64 = function (hash_int, bitDepth) {
-  var bbox = decode_bbox_uint64(hash_int, bitDepth);
+var decode_int = function (hash_int, bitDepth) {
+  var bbox = decode_bbox_int(hash_int, bitDepth);
   var lat = (bbox[0] + bbox[2]) / 2;
   var lon = (bbox[1] + bbox[3]) / 2;
   var latErr = bbox[2] - lat;
@@ -298,6 +298,113 @@ var neighbor = function (hashString, direction) {
     + direction[1] * lonLat.error.longitude * 2;
   return encode(neighborLat, neighborLon, hashString.length);
 };
+
+/**
+ * Neighbor Integer
+ *
+ * Find neighbor of a geohash integer in certain direction. Direction is a two-element array, i.e. [1,0] means north, [-1,-1] means southwest.
+ * direction [lat, lon], i.e.
+ * [1,0] - north
+ * [1,1] - northeast
+ * ...
+ * @param {String} hash_string
+ * @returns {Array}
+*/
+var neighbor_int = function(hash_int, direction, bitDepth) {
+    bitDepth = bitDepth || 52;
+    var lonlat = decode_int(hash_int, bitDepth);
+    var neighbor_lat = lonlat.latitude + direction[0] * lonlat.error.latitude * 2;
+    var neighbor_lon = lonlat.longitude + direction[1] * lonlat.error.longitude * 2;
+    return encode_int(neighbor_lat, neighbor_lon, bitDepth);
+};
+
+/**
+ * Neighbors
+ *
+ * Returns all neighbors' hashstrings clockwise from north around to northwest
+ * 7 0 1
+ * 6 x 2
+ * 5 4 3
+ * @param {String} hash_string
+ * @returns {encoded neighborHashList|Array}
+ */
+var neighbors = function(hash_string){
+
+    var hashstringLength = hash_string.length;
+
+    var lonlat = decode(hash_string);
+    var lat = lonlat.latitude;
+    var lon = lonlat.longitude;
+    var latErr = lonlat.error.latitude * 2;
+    var lonErr = lonlat.error.longitude * 2;
+
+    var neighbor_lat,
+        neighbor_lon;
+
+    var neighborHashList = [
+                            encodeNeighbor(1,0),
+                            encodeNeighbor(1,1),
+                            encodeNeighbor(0,1),
+                            encodeNeighbor(-1,1),
+                            encodeNeighbor(-1,0),
+                            encodeNeighbor(-1,-1),
+                            encodeNeighbor(0,-1),
+                            encodeNeighbor(1,-1)
+                            ];
+
+    function encodeNeighbor(neighborLatDir, neighborLonDir){
+        neighbor_lat = lat + neighborLatDir * latErr;
+        neighbor_lon = lon + neighborLonDir * lonErr;
+        return encode(neighbor_lat, neighbor_lon, hashstringLength);
+    }
+
+    return neighborHashList;
+};
+
+/**
+ * Neighbors Integer
+ *
+ * Returns all neighbors' hash integers clockwise from north around to northwest
+ * 7 0 1
+ * 6 x 2
+ * 5 4 3
+ * @param {Number} hash_int
+ * @param {Number} bitDepth
+ * @returns {encode_int'd neighborHashIntList|Array}
+ */
+var neighbors_int = function(hash_int, bitDepth){
+
+    bitDepth = bitDepth || 52;
+
+    var lonlat = decode_int(hash_int, bitDepth);
+    var lat = lonlat.latitude;
+    var lon = lonlat.longitude;
+    var latErr = lonlat.error.latitude * 2;
+    var lonErr = lonlat.error.longitude * 2;
+
+    var neighbor_lat,
+        neighbor_lon;
+
+    var neighborHashIntList = [
+                            encodeNeighbor_int(1,0),
+                            encodeNeighbor_int(1,1),
+                            encodeNeighbor_int(0,1),
+                            encodeNeighbor_int(-1,1),
+                            encodeNeighbor_int(-1,0),
+                            encodeNeighbor_int(-1,-1),
+                            encodeNeighbor_int(0,-1),
+                            encodeNeighbor_int(1,-1)
+                            ];
+
+    function encodeNeighbor_int(neighborLatDir, neighborLonDir){
+        neighbor_lat = lat + neighborLatDir * latErr;
+        neighbor_lon = lon + neighborLonDir * lonErr;
+        return encode_int(neighbor_lat, neighbor_lon, bitDepth);
+    }
+
+    return neighborHashIntList;
+};
+
 
 /**
  * Bounding Boxes
@@ -338,16 +445,62 @@ var bboxes = function (minLat, minLon, maxLat, maxLon, numberOfChars) {
   return hashList;
 };
 
+/**
+ * Bounding Boxes Integer
+ *
+ * Return all the hash integers between minLat, minLon, maxLat, maxLon in bitDepth
+ * @param {Number} minLat
+ * @param {Number} minLon
+ * @param {Number} maxLat
+ * @param {Number} maxLon
+ * @param {Number} bitDepth
+ * @returns {bboxes_int.hashList|Array}
+ */
+var bboxes_int = function(minLat, minLon, maxLat, maxLon, bitDepth){
+    bitDepth = bitDepth || 52;
+
+    var hashSouthWest = encode_int(minLat, minLon, bitDepth);
+    var hashNorthEast = encode_int(maxLat, maxLon, bitDepth);
+
+    var latlon = decode_int(hashSouthWest, bitDepth);
+
+    var perLat = latlon.error.latitude * 2;
+    var perLon = latlon.error.longitude * 2;
+
+    var boxSouthWest = decode_bbox_int(hashSouthWest, bitDepth);
+    var boxNorthEast = decode_bbox_int(hashNorthEast, bitDepth);
+
+    var latStep = Math.round((boxNorthEast[0] - boxSouthWest[0])/perLat);
+    var lonStep = Math.round((boxNorthEast[1] - boxSouthWest[1])/perLon);
+
+    var hashList = [];
+
+    for(var lat = 0; lat <= latStep; lat++){
+        for(var lon = 0; lon <= lonStep; lon++){
+            hashList.push(neighbor_int(hashSouthWest,[lat, lon], bitDepth));
+        }
+    }
+
+    return hashList;
+};
+
 var geohash = {
   'ENCODE_AUTO': ENCODE_AUTO,
   'encode': encode,
-  'encode_uint64': encode_uint64,
+  'encode_uint64': encode_int, // keeping for backwards compatibility, will deprecate
+  'encode_int': encode_int,
   'decode': decode,
-  'decode_uint64': decode_uint64,
+  'decode_int': decode_int,
+  'decode_uint64': decode_int, // keeping for backwards compatibility, will deprecate
   'decode_bbox': decode_bbox,
-  'decode_bbox_uint64': decode_bbox_uint64,
+  'decode_bbox_uint64': decode_bbox_int, // keeping for backwards compatibility, will deprecate
+  'decode_bbox_int': decode_bbox_int,
   'neighbor': neighbor,
-  'bboxes': bboxes
+  'neighbor_int': neighbor_int,
+  'neighbors': neighbors,
+  'neighbors_int': neighbors_int,
+  'bboxes': bboxes,
+  'bboxes_int': bboxes_int
 };
 
 module.exports = geohash;
