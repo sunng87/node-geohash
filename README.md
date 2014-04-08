@@ -24,7 +24,7 @@ console.log(latlon.longitude);
 ```
 
 
-## basic methods
+## Basic Methods
 
 ### geohash.encode (latitude, longitude, precision=9)
 
@@ -58,7 +58,7 @@ Find all 8 geohash neighbors `[n, ne, e, se, s, sw, w, nw]` of a geohash string.
 
 
 
-## geohash integer methods
+## Integer Methods
 
 Note that integer precision is capped at 52bits in Javscript. These are just regular javascript floating point numbers, but the functionality should mimic other uint64 geohash functions in geohash libraries for other languages and are compatible with the geohash integers produced by them, however any geohash integer encoded in anything more than 52bits will be resolved to 52bits resolution.
 
