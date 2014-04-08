@@ -11,32 +11,32 @@ exports.testEncodeBasic = function (test) {
   hashString = geohash.encode(32, 117, 3);
   test.equal(hashString, 'wte');
   test.done();
-}
+};
 
-exports.testUIntEncodeBasic = function (test) {
-  var hashStringUInt = geohash.encode_uint64(37.8324, 112.5584, 52);
+exports.testIntEncodeBasic = function (test) {
+  var hashStringUInt = geohash.encode_int(37.8324, 112.5584, 52);
   test.equal(hashStringUInt, 4064984913515641);
   test.done();
-}
+};
 
 exports.testDecodeBasic = function (test) {
   var latLon = geohash.decode('ww8p1r4t8');
   test.ok(Math.abs(37.8324 - latLon.latitude) < 0.0001);
   test.ok(Math.abs(112.5584 - latLon.longitude) < 0.0001);
   test.done();
-}
+};
 
-exports.testDecodeUIntBasic = function (test) {
-  var latLonUInt = geohash.decode_uint64(4064984913515641);
+exports.testDecodeIntBasic = function (test) {
+  var latLonUInt = geohash.decode_int(4064984913515641);
   test.ok(Math.abs(37.8324 - latLonUInt.latitude) < 0.0001, "(37.8324 - "+latLonUInt.latitude+" was >= 0.0001");
   test.ok(Math.abs(112.5584 - latLonUInt.longitude) < 0.0001, "(112.5584 - "+latLonUInt.longitude+" was >= 0.0001");
   test.done();
-}
+};
 
 exports.teshEncodeAutoBasic = function (test) {
   //Simple Auto Test
   test.throws(function(){
-    geohash.encode(44.97, -93.26, geohash.ENCODE_AUTO)
+    geohash.encode(44.97, -93.26, geohash.ENCODE_AUTO);
   });
 
   hashString = geohash.encode('44.97', '-93.26', geohash.ENCODE_AUTO);
@@ -45,7 +45,7 @@ exports.teshEncodeAutoBasic = function (test) {
   hashString = geohash.encode('44.978120', '-93.263536', geohash.ENCODE_AUTO);
   test.equal(hashString, '9zvxvsp8d170t');
   test.done();
-}
+};
 
 exports.testEncodeAuto = function (test) {
   var hashString;
@@ -80,7 +80,7 @@ exports.testEncodeAuto = function (test) {
     }
   }
   test.done();
-}
+};
 
 exports.testNeighbor = function (test) {
   var north = geohash.neighbor('dqcjq', [1, 0]);
@@ -89,12 +89,51 @@ exports.testNeighbor = function (test) {
   var southwest = geohash.neighbor('DQCJQ', [-1, -1]);
   test.equal(southwest, 'dqcjj');
   test.done();
-}
+};
+
+exports.testNeighborInt = function (test) {
+  var north = geohash.neighbor_int(1702789509, [1, 0], 32);
+  test.equal(north, 1702789522);
+
+  var southwest = geohash.neighbor_int(27898503327470, [-1, -1], 46);
+  test.equal(southwest, 27898503327465);
+  test.done();
+};
+
+exports.testNeighbors = function (test) {
+  var neighbors = geohash.neighbors('dqcjq');
+  test.equal(neighbors, ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt']);
+  test.equal(neighbors[0], geohash.neighbor('dqcjq', [1, 0]));
+
+  neighbors = geohash.neighbors('DQCJQ');
+  test.equal(neighbors, ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt']);
+  test.equal(neighbors[5], geohash.neighbor('DQCJQ', [-1, -1]));
+  test.done();
+};
+
+exports.testNeighborsInt = function (test) {
+  var neighbors = geohash.neighbors_int(1702789509, 32);
+  test.equal(neighbors, [ 1702789520,1702789522,1702789511,1702789510,1702789508,1702789422,1702789423,1702789434 ]);
+  test.equal(neighbors[0], geohash.neighbor_int(1702789509, [1, 0]));
+
+  neighbors = geohash.neighbors_int(27898503327470, 46);
+  test.equal(neighbors, [ 27898503327471,27898503349317,27898503349316,27898503349313,27898503327467,27898503327465,27898503327468,27898503327469 ]);
+  test.equal(neighbors[5], geohash.neighbor_int(27898503327470, [-1, -1]));
+  test.done();
+};
 
 exports.testBBoxes = function (test) {
   var bboxes = geohash.bboxes(30, 120, 30.0001, 120.0001, 8);
   test.equal(bboxes[bboxes.length - 1], geohash.encode(30.0001, 120.0001, 8));
   test.equal(bboxes[bboxes.length - 1], geohash.encode(30.0001, 120.0001, 8));
   test.done();
-}
+};
+
+exports.testBBoxesInt = function (test) {
+  var bboxes = geohash.bboxes_int(30, 120, 30.0001, 120.0001, 50);
+  test.equal(bboxes[bboxes.length - 1], geohash.encode_int(30.0001, 120.0001, 50));
+  test.equal(bboxes[bboxes.length - 1], geohash.encode_int(30.0001, 120.0001, 50));
+  test.done();
+};
+
 return exports;
