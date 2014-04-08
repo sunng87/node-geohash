@@ -93,7 +93,7 @@ exports.testNeighbor = function (test) {
 
 exports.testNeighborInt = function (test) {
   var north = geohash.neighbor_int(1702789509, [1, 0], 32);
-  test.equal(north, 1702789522);
+  test.equal(north, 1702789520);
 
   var southwest = geohash.neighbor_int(27898503327470, [-1, -1], 46);
   test.equal(southwest, 27898503327465);
@@ -102,22 +102,34 @@ exports.testNeighborInt = function (test) {
 
 exports.testNeighbors = function (test) {
   var neighbors = geohash.neighbors('dqcjq');
-  test.equal(neighbors, ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt']);
+  var neighbor_test = ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt'];
+  for(var i=0; i<neighbors.length; i++){
+    test.equal(neighbors[i], neighbor_test[i]);
+  }  
   test.equal(neighbors[0], geohash.neighbor('dqcjq', [1, 0]));
 
   neighbors = geohash.neighbors('DQCJQ');
-  test.equal(neighbors, ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt']);
+  neighbor_test = ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt'];
+  for(i=0; i<neighbors.length; i++){
+    test.equal(neighbors[i], neighbor_test[i]);
+  }  
   test.equal(neighbors[5], geohash.neighbor('DQCJQ', [-1, -1]));
   test.done();
 };
 
 exports.testNeighborsInt = function (test) {
   var neighbors = geohash.neighbors_int(1702789509, 32);
-  test.equal(neighbors, [ 1702789520,1702789522,1702789511,1702789510,1702789508,1702789422,1702789423,1702789434 ]);
+  var neighbor_test = [ 1702789520,1702789522,1702789511,1702789510,1702789508,1702789422,1702789423,1702789434 ];
+  for(var i=0; i<neighbors.length; i++){
+    test.equal(neighbors[i], neighbor_test[i]);
+  }  
   test.equal(neighbors[0], geohash.neighbor_int(1702789509, [1, 0]));
 
   neighbors = geohash.neighbors_int(27898503327470, 46);
-  test.equal(neighbors, [ 27898503327471,27898503349317,27898503349316,27898503349313,27898503327467,27898503327465,27898503327468,27898503327469 ]);
+  neighbor_test = [ 27898503327471,27898503349317,27898503349316,27898503349313,27898503327467,27898503327465,27898503327468,27898503327469 ];
+  for(i=0; i<neighbors.length; i++){
+    test.equal(neighbors[i], neighbor_test[i]);
+  }  
   test.equal(neighbors[5], geohash.neighbor_int(27898503327470, [-1, -1]));
   test.done();
 };
