@@ -4,6 +4,8 @@ node-geohash
 Geohash library for nodejs.
 
 [![Build Status](https://travis-ci.org/sunng87/node-geohash.svg)](https://travis-ci.org/sunng87/node-geohash)
+![Dependencies](https://david-dm.org/sunng87/node-geohash.png)]
+[![NPM version](https://badge.fury.io/js/ngeohash.svg)](http://badge.fury.io/js/ngeohash)
 
 ## Install
 
