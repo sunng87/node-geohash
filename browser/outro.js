@@ -1,0 +1,3 @@
+
+// outro.js
+})(window);
