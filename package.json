@@ -27,7 +27,8 @@
         "nodeunit": ">=0.8"
     },
     "scripts": {
-        "test": "nodeunit tests/test.js"
+        "test": "nodeunit tests/test.js",
+        "install": "node browser/build.js"
     },
     "main": "./main",
     "license": "MIT",
