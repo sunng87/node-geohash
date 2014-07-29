@@ -5,7 +5,7 @@ Geohash library for nodejs.
 
 [![Build Status](https://travis-ci.org/sunng87/node-geohash.svg)](https://travis-ci.org/sunng87/node-geohash)
 [![NPM version](https://badge.fury.io/js/ngeohash.svg)](http://badge.fury.io/js/ngeohash)
-![Dependencies](https://david-dm.org/sunng87/node-geohash.png) 
+![Dependencies](https://david-dm.org/sunng87/node-geohash.png)
 
 ## Install
 
@@ -100,7 +100,18 @@ Find all 8 neighbors `[n, ne, e, se, s, sw, w, nw]` of a geohash integer. This m
 
 Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") for more information.
 
+## Node-Geohash for browser
 
+We recently added a [browserify](http://browserify.org/) hook in `npm
+install`. `ngeohash.js` will be generated during `npm install`, and
+you can use this file in your javascript application for browser.
+
+```html
+<script src="./path/to/ngeohash.js"></script>
+<script>
+alert(ngeohash.encode(114.23, 38.23));
+</script>
+```
 
 ## Contributors
 
