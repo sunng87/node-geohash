@@ -94,12 +94,6 @@ Find the neighbor of a geohash integer in certain direction. Direction is a two-
 
 Find all 8 neighbors `[n, ne, e, se, s, sw, w, nw]` of a geohash integer. This method is more efficient than running the geohash.neighbor method multiple times for all directions. The `bitDepth` should be specified, but defaults to 52 bits.
 
-
-
-## About Geohash
-
-Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") for more information.
-
 ## Node-Geohash for browser
 
 We recently added a [browserify](http://browserify.org/) hook in `npm
@@ -112,6 +106,11 @@ you can use this file in your javascript application for browser.
 alert(ngeohash.encode(114.23, 38.23));
 </script>
 ```
+
+## About Geohash
+
+Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") for more information.
+
 
 ## Contributors
 
