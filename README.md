@@ -111,6 +111,10 @@ alert(ngeohash.encode(114.23, 38.23));
 
 Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") for more information.
 
+## See Also
+
+[Geohash.rs](https://github.com/sunng87/geohash.rs): node-geohash ported to [Rust](https://rust-lang.org): A rust library (rlib) for geohash.
+
 
 ## Contributors
 
