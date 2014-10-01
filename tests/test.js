@@ -1,4 +1,4 @@
-var geohash = require('../main.js');
+var geohash = require('../');
 var test = require('assert');
 
 var longitude = 112.5584;
@@ -105,14 +105,14 @@ exports.testNeighbors = function (test) {
   var neighbor_test = ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt'];
   for(var i=0; i<neighbors.length; i++){
     test.equal(neighbors[i], neighbor_test[i]);
-  }  
+  }
   test.equal(neighbors[0], geohash.neighbor('dqcjq', [1, 0]));
 
   neighbors = geohash.neighbors('DQCJQ');
   neighbor_test = ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt'];
   for(i=0; i<neighbors.length; i++){
     test.equal(neighbors[i], neighbor_test[i]);
-  }  
+  }
   test.equal(neighbors[5], geohash.neighbor('DQCJQ', [-1, -1]));
   test.done();
 };
@@ -122,14 +122,14 @@ exports.testNeighborsInt = function (test) {
   var neighbor_test = [ 1702789520,1702789522,1702789511,1702789510,1702789508,1702789422,1702789423,1702789434 ];
   for(var i=0; i<neighbors.length; i++){
     test.equal(neighbors[i], neighbor_test[i]);
-  }  
+  }
   test.equal(neighbors[0], geohash.neighbor_int(1702789509, [1, 0]));
 
   neighbors = geohash.neighbors_int(27898503327470, 46);
   neighbor_test = [ 27898503327471,27898503349317,27898503349316,27898503349313,27898503327467,27898503327465,27898503327468,27898503327469 ];
   for(i=0; i<neighbors.length; i++){
     test.equal(neighbors[i], neighbor_test[i]);
-  }  
+  }
   test.equal(neighbors[5], geohash.neighbor_int(27898503327470, [-1, -1]));
   test.done();
 };
