@@ -6,6 +6,7 @@ Geohash library for nodejs.
 [![Build Status](https://travis-ci.org/sunng87/node-geohash.svg)](https://travis-ci.org/sunng87/node-geohash)
 [![NPM version](https://badge.fury.io/js/ngeohash.svg)](http://badge.fury.io/js/ngeohash)
 ![Dependencies](https://david-dm.org/sunng87/node-geohash.png)
+[![Donate](https://img.shields.io/badge/donate-liberapay-yellow.svg)](https://liberapay.com/Sunng/donate)
 
 ## Install
 
@@ -113,17 +114,14 @@ Check [Wikipedia](http://en.wikipedia.org/wiki/Geohash "Wiki page for geohash") 
 
 ## See Also
 
-[Geohash.rs](https://github.com/sunng87/geohash.rs): node-geohash ported to [Rust](https://rust-lang.org): A rust library (rlib) for geohash.
-
-
-## Contributors
-
-* [Seth Miller](https://github.com/four43)
-* [Zhu Zhe](https://github.com/zhuzhe1983)
-* [Arjun Mehta](https://github.com/arjunmehta)
-
-
+[Geohash.rs](https://github.com/sunng87/geohash.rs): node-geohash ported to [Rust](https://rust-lang.org): A rust library for geohash.
 
 ## License
 
 node-geohash is open sourced under MIT License, of course.
+
+## Donation
+
+I'm now accepting donation on [liberapay](https://liberapay.com/Sunng/donate),
+if you find my work helpful and want to keep it going.
+
