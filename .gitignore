@@ -1,2 +1,6 @@
 node_modules/
 ngeohash.js
+.vs/
+obj/
+bin/
+*.njsproj

@@ -30,6 +30,11 @@ for (var i = 0; i < BASE32_CODES.length; i++) {
 }
 
 var ENCODE_AUTO = 'auto';
+
+const MIN_LAT = -90;
+const MAX_LAT = 90;
+const MIN_LON = -180;
+const MAX_LON = 180;
 /**
  * Significant Figure Hash Length
  *
@@ -71,10 +76,10 @@ var encode = function (latitude, longitude, numberOfChars) {
   bits = 0,
   bitsTotal = 0,
   hash_value = 0,
-  maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180,
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
   mid;
   while (chars.length < numberOfChars) {
     if (bitsTotal % 2 === 0) {
@@ -124,10 +129,10 @@ var encode_int = function (latitude, longitude, bitDepth) {
   bitDepth = bitDepth || 52;
 
   var bitsTotal = 0,
-  maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180,
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
   mid,
   combinedBits = 0;
 
@@ -164,10 +169,10 @@ var encode_int = function (latitude, longitude, bitDepth) {
  */
 var decode_bbox = function (hash_string) {
   var isLon = true,
-  maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180,
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
   mid;
 
   var hashValue = 0;
@@ -210,10 +215,10 @@ var decode_bbox_int = function (hashInt, bitDepth) {
 
   bitDepth = bitDepth || 52;
 
-  var maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180;
+  var maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON;
 
   var latBit = 0, lonBit = 0;
   var step = bitDepth / 2;
