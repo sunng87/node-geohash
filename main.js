@@ -30,6 +30,11 @@ for (var i = 0; i < BASE32_CODES.length; i++) {
 }
 
 var ENCODE_AUTO = 'auto';
+
+const MIN_LAT = -90;
+const MAX_LAT = 90;
+const MIN_LON = -180;
+const MAX_LON = 180;
 /**
  * Significant Figure Hash Length
  *
@@ -71,10 +76,10 @@ var encode = function (latitude, longitude, numberOfChars) {
   bits = 0,
   bitsTotal = 0,
   hash_value = 0,
-  maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180,
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
   mid;
   while (chars.length < numberOfChars) {
     if (bitsTotal % 2 === 0) {
@@ -124,10 +129,10 @@ var encode_int = function (latitude, longitude, bitDepth) {
   bitDepth = bitDepth || 52;
 
   var bitsTotal = 0,
-  maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180,
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
   mid,
   combinedBits = 0;
 
@@ -164,11 +169,11 @@ var encode_int = function (latitude, longitude, bitDepth) {
  */
 var decode_bbox = function (hash_string) {
   var isLon = true,
-  maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180,
-  mid;
+    maxLat = MAX_LAT,
+    minLat = MIN_LAT,
+    maxLon = MAX_LON,
+    minLon = MIN_LON,
+    mid;
 
   var hashValue = 0;
   for (var i = 0, l = hash_string.length; i < l; i++) {
@@ -210,10 +215,10 @@ var decode_bbox_int = function (hashInt, bitDepth) {
 
   bitDepth = bitDepth || 52;
 
-  var maxLat = 90,
-  minLat = -90,
-  maxLon = 180,
-  minLon = -180;
+  var maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON;
 
   var latBit = 0, lonBit = 0;
   var step = bitDepth / 2;
@@ -259,7 +264,7 @@ var decode = function (hashString) {
   var latErr = bbox[2] - lat;
   var lonErr = bbox[3] - lon;
   return {latitude: lat, longitude: lon,
-          error: {latitude: latErr, longitude: lonErr}};
+      error: {latitude: latErr, longitude: lonErr}};
 };
 
 /**
@@ -299,6 +304,8 @@ var neighbor = function (hashString, direction) {
     + direction[0] * lonLat.error.latitude * 2;
   var neighborLon = lonLat.longitude
     + direction[1] * lonLat.error.longitude * 2;
+  neighborLon = ensure_valid_lon(neighborLon);
+  neighborLat = ensure_valid_lat(neighborLat);
   return encode(neighborLat, neighborLon, hashString.length);
 };
 
@@ -313,11 +320,13 @@ var neighbor = function (hashString, direction) {
  * @param {String} hash_string
  * @returns {Array}
 */
-var neighbor_int = function(hash_int, direction, bitDepth) {
+var neighbor_int = function (hash_int, direction, bitDepth) {
     bitDepth = bitDepth || 52;
     var lonlat = decode_int(hash_int, bitDepth);
     var neighbor_lat = lonlat.latitude + direction[0] * lonlat.error.latitude * 2;
     var neighbor_lon = lonlat.longitude + direction[1] * lonlat.error.longitude * 2;
+    neighbor_lon = ensure_valid_lon(neighbor_lon);
+    neighbor_lat = ensure_valid_lat(neighbor_lat);
     return encode_int(neighbor_lat, neighbor_lon, bitDepth);
 };
 
@@ -331,7 +340,7 @@ var neighbor_int = function(hash_int, direction, bitDepth) {
  * @param {String} hash_string
  * @returns {encoded neighborHashList|Array}
  */
-var neighbors = function(hash_string){
+var neighbors = function (hash_string) {
 
     var hashstringLength = hash_string.length;
 
@@ -358,6 +367,8 @@ var neighbors = function(hash_string){
     function encodeNeighbor(neighborLatDir, neighborLonDir){
         neighbor_lat = lat + neighborLatDir * latErr;
         neighbor_lon = lon + neighborLonDir * lonErr;
+        neighbor_lon = ensure_valid_lon(neighbor_lon);
+        neighbor_lat = ensure_valid_lat(neighbor_lat);
         return encode(neighbor_lat, neighbor_lon, hashstringLength);
     }
 
@@ -389,19 +400,21 @@ var neighbors_int = function(hash_int, bitDepth){
         neighbor_lon;
 
     var neighborHashIntList = [
-                            encodeNeighbor_int(1,0),
-                            encodeNeighbor_int(1,1),
-                            encodeNeighbor_int(0,1),
-                            encodeNeighbor_int(-1,1),
-                            encodeNeighbor_int(-1,0),
-                            encodeNeighbor_int(-1,-1),
-                            encodeNeighbor_int(0,-1),
-                            encodeNeighbor_int(1,-1)
-                            ];
+                               encodeNeighbor_int(1,0),
+                               encodeNeighbor_int(1,1),
+                               encodeNeighbor_int(0,1),
+                               encodeNeighbor_int(-1,1),
+                               encodeNeighbor_int(-1,0),
+                               encodeNeighbor_int(-1,-1),
+                               encodeNeighbor_int(0,-1),
+                               encodeNeighbor_int(1,-1)
+                               ];
 
     function encodeNeighbor_int(neighborLatDir, neighborLonDir){
         neighbor_lat = lat + neighborLatDir * latErr;
         neighbor_lon = lon + neighborLonDir * lonErr;
+        neighbor_lon = ensure_valid_lon(neighbor_lon);
+        neighbor_lat = ensure_valid_lat(neighbor_lat);
         return encode_int(neighbor_lat, neighbor_lon, bitDepth);
     }
 
@@ -484,7 +497,23 @@ var bboxes_int = function(minLat, minLon, maxLat, maxLon, bitDepth){
         }
     }
 
-    return hashList;
+  return hashList;
+};
+
+function ensure_valid_lon(lon) {
+  if (lon > MAX_LON)
+    return MIN_LON + lon % MAX_LON;
+  if (lon < MIN_LON)
+    return MAX_LON + lon % MAX_LON;
+  return lon;
+};
+
+function ensure_valid_lat(lat) {
+  if (lat > MAX_LAT)
+    return MAX_LAT;
+  if (lat < MIN_LAT)
+    return MIN_LAT;
+  return lat;
 };
 
 var geohash = {

@@ -88,6 +88,16 @@ exports.testNeighbor = function (test) {
 
   var southwest = geohash.neighbor('DQCJQ', [-1, -1]);
   test.equal(southwest, 'dqcjj');
+  
+  var northEast = geohash.neighbor('r', [1, 1]);
+  test.equal(northEast, '8');
+
+  var east = geohash.neighbor('r', [0, 1]);
+  test.equal(east, '2');
+  
+  var southEast = geohash.neighbor('r', [-1, 1]);
+  test.equal(southEast, '0');
+
   test.done();
 };
 
@@ -114,6 +124,14 @@ exports.testNeighbors = function (test) {
     test.equal(neighbors[i], neighbor_test[i]);
   }
   test.equal(neighbors[5], geohash.neighbor('DQCJQ', [-1, -1]));
+
+  neighbors = geohash.neighbors('21202')
+  neighbor_test = ['21208', '21209', '21203', '21201', '21200', 'rcrbp', 'rcrbr', 'rcrbx']
+  for (i = 0; i < neighbors.length; i++) {
+    test.equal(neighbors[i], neighbor_test[i]);
+  }
+  test.equal(neighbors[6], geohash.neighbor('21202', [0, -1]));
+
   test.done();
 };
 
