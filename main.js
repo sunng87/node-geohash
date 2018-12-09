@@ -46,7 +46,7 @@ const MAX_LON = 180;
  * the geohash.
  * @type Array
  */
-//   Desired sig figs:  0  1  2  3  4   5   6   7   8   9  10
+//     Desired sig figs:  0  1  2  3  4   5   6   7   8   9  10
 var SIGFIG_HASH_LENGTH = [0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18];
 /**
  * Encode
@@ -73,14 +73,14 @@ var encode = function (latitude, longitude, numberOfChars) {
   }
 
   var chars = [],
-    bits = 0,
-    bitsTotal = 0,
-    hash_value = 0,
-    maxLat = MAX_LAT,
-    minLat = MIN_LAT,
-    maxLon = MAX_LON,
-    minLon = MIN_LON,
-    mid;
+  bits = 0,
+  bitsTotal = 0,
+  hash_value = 0,
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
+  mid;
   while (chars.length < numberOfChars) {
     if (bitsTotal % 2 === 0) {
       mid = (maxLon + minLon) / 2;
@@ -129,12 +129,12 @@ var encode_int = function (latitude, longitude, bitDepth) {
   bitDepth = bitDepth || 52;
 
   var bitsTotal = 0,
-    maxLat = MAX_LAT,
-    minLat = MIN_LAT,
-    maxLon = MAX_LON,
-    minLon = MIN_LON,
-    mid,
-    combinedBits = 0;
+  maxLat = MAX_LAT,
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON,
+  mid,
+  combinedBits = 0;
 
   while (bitsTotal < bitDepth) {
     combinedBits *= 2;
@@ -216,9 +216,9 @@ var decode_bbox_int = function (hashInt, bitDepth) {
   bitDepth = bitDepth || 52;
 
   var maxLat = MAX_LAT,
-    minLat = MIN_LAT,
-    maxLon = MAX_LON,
-    minLon = MIN_LON;
+  minLat = MIN_LAT,
+  maxLon = MAX_LON,
+  minLon = MIN_LON;
 
   var latBit = 0, lonBit = 0;
   var step = bitDepth / 2;
@@ -282,8 +282,8 @@ var decode_int = function (hash_int, bitDepth) {
   var lon = (bbox[1] + bbox[3]) / 2;
   var latErr = bbox[2] - lat;
   var lonErr = bbox[3] - lon;
-    return {latitude: lat, longitude: lon,
-      error: {latitude: latErr, longitude: lonErr}};
+  return {latitude: lat, longitude: lon,
+          error: {latitude: latErr, longitude: lonErr}};
 };
 
 /**
@@ -321,13 +321,13 @@ var neighbor = function (hashString, direction) {
  * @returns {Array}
 */
 var neighbor_int = function (hash_int, direction, bitDepth) {
-  bitDepth = bitDepth || 52;
-  var lonlat = decode_int(hash_int, bitDepth);
-  var neighbor_lat = lonlat.latitude + direction[0] * lonlat.error.latitude * 2;
-  var neighbor_lon = lonlat.longitude + direction[1] * lonlat.error.longitude * 2;
-  neighbor_lon = ensure_valid_lon(neighbor_lon);
-  neighbor_lat = ensure_valid_lat(neighbor_lat);
-  return encode_int(neighbor_lat, neighbor_lon, bitDepth);
+    bitDepth = bitDepth || 52;
+    var lonlat = decode_int(hash_int, bitDepth);
+    var neighbor_lat = lonlat.latitude + direction[0] * lonlat.error.latitude * 2;
+    var neighbor_lon = lonlat.longitude + direction[1] * lonlat.error.longitude * 2;
+    neighbor_lon = ensure_valid_lon(neighbor_lon);
+    neighbor_lat = ensure_valid_lat(neighbor_lat);
+    return encode_int(neighbor_lat, neighbor_lon, bitDepth);
 };
 
 /**
@@ -342,37 +342,37 @@ var neighbor_int = function (hash_int, direction, bitDepth) {
  */
 var neighbors = function (hash_string) {
 
-  var hashstringLength = hash_string.length;
+    var hashstringLength = hash_string.length;
 
-  var lonlat = decode(hash_string);
-  var lat = lonlat.latitude;
-  var lon = lonlat.longitude;
-  var latErr = lonlat.error.latitude * 2;
-  var lonErr = lonlat.error.longitude * 2;
+    var lonlat = decode(hash_string);
+    var lat = lonlat.latitude;
+    var lon = lonlat.longitude;
+    var latErr = lonlat.error.latitude * 2;
+    var lonErr = lonlat.error.longitude * 2;
 
-  var neighbor_lat,
-    neighbor_lon;
+    var neighbor_lat,
+        neighbor_lon;
 
-  var neighborHashList = [
-              encodeNeighbor(1,0),
-              encodeNeighbor(1,1),
-              encodeNeighbor(0,1),
-              encodeNeighbor(-1,1),
-              encodeNeighbor(-1,0),
-              encodeNeighbor(-1,-1),
-              encodeNeighbor(0,-1),
-              encodeNeighbor(1,-1)
-  ];
+    var neighborHashList = [
+                            encodeNeighbor(1,0),
+                            encodeNeighbor(1,1),
+                            encodeNeighbor(0,1),
+                            encodeNeighbor(-1,1),
+                            encodeNeighbor(-1,0),
+                            encodeNeighbor(-1,-1),
+                            encodeNeighbor(0,-1),
+                            encodeNeighbor(1,-1)
+                            ];
 
-  function encodeNeighbor(neighborLatDir, neighborLonDir){
-    neighbor_lat = lat + neighborLatDir * latErr;
-    neighbor_lon = lon + neighborLonDir * lonErr;
-    neighbor_lon = ensure_valid_lon(neighbor_lon);
-    neighbor_lat = ensure_valid_lat(neighbor_lat);
-    return encode(neighbor_lat, neighbor_lon, hashstringLength);
-  }
+    function encodeNeighbor(neighborLatDir, neighborLonDir){
+        neighbor_lat = lat + neighborLatDir * latErr;
+        neighbor_lon = lon + neighborLonDir * lonErr;
+        neighbor_lon = ensure_valid_lon(neighbor_lon);
+        neighbor_lat = ensure_valid_lat(neighbor_lat);
+        return encode(neighbor_lat, neighbor_lon, hashstringLength);
+    }
 
-  return neighborHashList;
+    return neighborHashList;
 };
 
 /**
@@ -388,37 +388,37 @@ var neighbors = function (hash_string) {
  */
 var neighbors_int = function(hash_int, bitDepth){
 
-  bitDepth = bitDepth || 52;
+    bitDepth = bitDepth || 52;
 
-  var lonlat = decode_int(hash_int, bitDepth);
-  var lat = lonlat.latitude;
-  var lon = lonlat.longitude;
-  var latErr = lonlat.error.latitude * 2;
-  var lonErr = lonlat.error.longitude * 2;
+    var lonlat = decode_int(hash_int, bitDepth);
+    var lat = lonlat.latitude;
+    var lon = lonlat.longitude;
+    var latErr = lonlat.error.latitude * 2;
+    var lonErr = lonlat.error.longitude * 2;
 
-  var neighbor_lat,
-    neighbor_lon;
+    var neighbor_lat,
+        neighbor_lon;
 
-  var neighborHashIntList = [
-              encodeNeighbor_int(1,0),
-              encodeNeighbor_int(1,1),
-              encodeNeighbor_int(0,1),
-              encodeNeighbor_int(-1,1),
-              encodeNeighbor_int(-1,0),
-              encodeNeighbor_int(-1,-1),
-              encodeNeighbor_int(0,-1),
-              encodeNeighbor_int(1,-1)
-              ];
+    var neighborHashIntList = [
+                               encodeNeighbor_int(1,0),
+                               encodeNeighbor_int(1,1),
+                               encodeNeighbor_int(0,1),
+                               encodeNeighbor_int(-1,1),
+                               encodeNeighbor_int(-1,0),
+                               encodeNeighbor_int(-1,-1),
+                               encodeNeighbor_int(0,-1),
+                               encodeNeighbor_int(1,-1)
+                               ];
 
-  function encodeNeighbor_int(neighborLatDir, neighborLonDir){
-    neighbor_lat = lat + neighborLatDir * latErr;
-    neighbor_lon = lon + neighborLonDir * lonErr;
-    neighbor_lon = ensure_valid_lon(neighbor_lon);
-    neighbor_lat = ensure_valid_lat(neighbor_lat);
-    return encode_int(neighbor_lat, neighbor_lon, bitDepth);
-  }
+    function encodeNeighbor_int(neighborLatDir, neighborLonDir){
+        neighbor_lat = lat + neighborLatDir * latErr;
+        neighbor_lon = lon + neighborLonDir * lonErr;
+        neighbor_lon = ensure_valid_lon(neighbor_lon);
+        neighbor_lat = ensure_valid_lat(neighbor_lat);
+        return encode_int(neighbor_lat, neighbor_lon, bitDepth);
+    }
 
-  return neighborHashIntList;
+    return neighborHashIntList;
 };
 
 
@@ -473,29 +473,29 @@ var bboxes = function (minLat, minLon, maxLat, maxLon, numberOfChars) {
  * @returns {bboxes_int.hashList|Array}
  */
 var bboxes_int = function(minLat, minLon, maxLat, maxLon, bitDepth){
-  bitDepth = bitDepth || 52;
+    bitDepth = bitDepth || 52;
 
-  var hashSouthWest = encode_int(minLat, minLon, bitDepth);
-  var hashNorthEast = encode_int(maxLat, maxLon, bitDepth);
+    var hashSouthWest = encode_int(minLat, minLon, bitDepth);
+    var hashNorthEast = encode_int(maxLat, maxLon, bitDepth);
 
-  var latlon = decode_int(hashSouthWest, bitDepth);
+    var latlon = decode_int(hashSouthWest, bitDepth);
 
-  var perLat = latlon.error.latitude * 2;
-  var perLon = latlon.error.longitude * 2;
+    var perLat = latlon.error.latitude * 2;
+    var perLon = latlon.error.longitude * 2;
 
-  var boxSouthWest = decode_bbox_int(hashSouthWest, bitDepth);
-  var boxNorthEast = decode_bbox_int(hashNorthEast, bitDepth);
+    var boxSouthWest = decode_bbox_int(hashSouthWest, bitDepth);
+    var boxNorthEast = decode_bbox_int(hashNorthEast, bitDepth);
 
-  var latStep = Math.round((boxNorthEast[0] - boxSouthWest[0])/perLat);
-  var lonStep = Math.round((boxNorthEast[1] - boxSouthWest[1])/perLon);
+    var latStep = Math.round((boxNorthEast[0] - boxSouthWest[0])/perLat);
+    var lonStep = Math.round((boxNorthEast[1] - boxSouthWest[1])/perLon);
 
-  var hashList = [];
+    var hashList = [];
 
-  for(var lat = 0; lat <= latStep; lat++){
-    for(var lon = 0; lon <= lonStep; lon++){
-      hashList.push(neighbor_int(hashSouthWest,[lat, lon], bitDepth));
+    for(var lat = 0; lat <= latStep; lat++){
+        for(var lon = 0; lon <= lonStep; lon++){
+            hashList.push(neighbor_int(hashSouthWest,[lat, lon], bitDepth));
+        }
     }
-  }
 
   return hashList;
 };

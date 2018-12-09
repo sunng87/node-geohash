@@ -111,17 +111,17 @@ exports.testNeighborInt = function (test) {
 };
 
 exports.testNeighbors = function (test) {
-   var neighbors = geohash.neighbors('dqcjq');
+  var neighbors = geohash.neighbors('dqcjq');
   var neighbor_test = ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt'];
   for(var i=0; i<neighbors.length; i++){
-  test.equal(neighbors[i], neighbor_test[i]);
+    test.equal(neighbors[i], neighbor_test[i]);
   }
   test.equal(neighbors[0], geohash.neighbor('dqcjq', [1, 0]));
 
   neighbors = geohash.neighbors('DQCJQ');
   neighbor_test = ['dqcjw','dqcjx','dqcjr','dqcjp','dqcjn','dqcjj','dqcjm','dqcjt'];
   for(i=0; i<neighbors.length; i++){
-  test.equal(neighbors[i], neighbor_test[i]);
+    test.equal(neighbors[i], neighbor_test[i]);
   }
   test.equal(neighbors[5], geohash.neighbor('DQCJQ', [-1, -1]));
 
