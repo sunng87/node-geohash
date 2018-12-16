@@ -31,10 +31,10 @@ for (var i = 0; i < BASE32_CODES.length; i++) {
 
 var ENCODE_AUTO = 'auto';
 
-const MIN_LAT = -90;
-const MAX_LAT = 90;
-const MIN_LON = -180;
-const MAX_LON = 180;
+var MIN_LAT = -90;
+var MAX_LAT = 90;
+var MIN_LON = -180;
+var MAX_LON = 180;
 /**
  * Significant Figure Hash Length
  *
