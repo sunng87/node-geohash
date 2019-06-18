@@ -434,6 +434,9 @@ var neighbors_int = function(hash_int, bitDepth){
  * @returns {bboxes.hashList|Array}
  */
 var bboxes = function (minLat, minLon, maxLat, maxLon, numberOfChars) {
+  if (numberOfChars === 0) {
+    throw new Error("numberOfChars must be strictly positive");
+  }
   numberOfChars = numberOfChars || 9;
 
   var hashSouthWest = encode(minLat, minLon, numberOfChars);
