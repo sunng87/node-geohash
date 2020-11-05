@@ -28,7 +28,8 @@
     "browserify": ">=5.0"
   },
   "scripts": {
-    "test": "nodeunit tests/test.js"
+    "test": "nodeunit tests/test.js",
+    "browserify": "browserify . -o ngeohash.js -s ngeohash"
   },
   "main": "./main",
   "license": "MIT",

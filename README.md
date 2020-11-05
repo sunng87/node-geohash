@@ -97,8 +97,8 @@ Find all 8 neighbors `[n, ne, e, se, s, sw, w, nw]` of a geohash integer. This m
 
 ## Node-Geohash for browser
 
-We recently added a [browserify](http://browserify.org/) hook in `npm
-install`. `ngeohash.js` will be generated during `npm install`, and
+We recently added a [browserify](http://browserify.org/) script with `npm
+run browserify`. `ngeohash.js` will be generated and
 you can use this file in your javascript application for browser.
 
 ```html
