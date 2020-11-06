@@ -52,14 +52,17 @@ var SIGFIG_HASH_LENGTH = [0, 5, 7, 8, 11, 12, 13, 15, 16, 17, 18];
  * Encode
  *
  * Create a Geohash out of a latitude and longitude that is
- * `numberOfChars` long.
+ * `numberOfChars` long. The flag `useBase4` changes from base32 to base4.
  *
  * @param {Number|String} latitude
  * @param {Number|String} longitude
  * @param {Number} numberOfChars
+ * @param {Boolean} useBase4
  * @returns {String}
  */
-var encode = function (latitude, longitude, numberOfChars) {
+var encode = function (latitude, longitude, numberOfChars, useBase4) {
+  var maxBits = 5;
+  if (useBase4 === true) maxBits = 2; else useBase4=false;
   if (numberOfChars === ENCODE_AUTO) {
     if (typeof(latitude) === 'number' || typeof(longitude) === 'number') {
       throw new Error('string notation required for auto precision.');
@@ -68,10 +71,10 @@ var encode = function (latitude, longitude, numberOfChars) {
     var decSigFigsLong = longitude.split('.')[1].length;
     var numberOfSigFigs = Math.max(decSigFigsLat, decSigFigsLong);
     numberOfChars = SIGFIG_HASH_LENGTH[numberOfSigFigs];
+    if (useBase4) numberOfChars = Math.ceil(2.5*numberOfChars);
   } else if (numberOfChars === undefined) {
-    numberOfChars = 9;
+    numberOfChars = useBase4? 23: 9;
   }
-
   var chars = [],
   bits = 0,
   bitsTotal = 0,
@@ -104,7 +107,7 @@ var encode = function (latitude, longitude, numberOfChars) {
 
     bits++;
     bitsTotal++;
-    if (bits === 5) {
+    if (bits === maxBits) {
       var code = BASE32_CODES[hash_value];
       chars.push(code);
       bits = 0;
@@ -113,6 +116,20 @@ var encode = function (latitude, longitude, numberOfChars) {
   }
   return chars.join('');
 };
+
+/**
+ * encodeBase4
+ *
+ * A wrap function for encode(a,b,c,true), returns base4 representation.
+ *
+ * @param {Number|String} latitude
+ * @param {Number|String} longitude
+ * @param {Number} numberOfChars
+ * @returns {String}
+ */
+var encodeBase4 = function (latitude, longitude, numberOfChars) {
+  return encode(latitude, longitude, numberOfChars,true);
+}
 
 /**
  * Encode Integer
@@ -522,6 +539,7 @@ function ensure_valid_lat(lat) {
 var geohash = {
   'ENCODE_AUTO': ENCODE_AUTO,
   'encode': encode,
+  'encodeBase4': encodeBase4,
   'encode_uint64': encode_int, // keeping for backwards compatibility, will deprecate
   'encode_int': encode_int,
   'decode': decode,
