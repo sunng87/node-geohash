@@ -46,7 +46,7 @@ Decode hashstring into a bounding box that matches it. Data is returned as a fou
 
 ### geohash.bboxes (minlat, minlon, maxlat, maxlon, precision=9)
 
-Get all hashstringes between `[minlat, minlon]` and `[maxlat, maxlon]`. These keys can be used to find a poi stored in the cache with hashstring keys. eg. show all points in the visible range of map
+Get all hashstringes between `[minlat, minlon]` and `[maxlat, maxlon]`. These keys can be used to find a poi stored in the cache with hashstring keys. eg. show all points in the visible range of map. `[minlat, minlon]` correspond to the southwest starting hash, whereas `[maxlat, maxlon]` correspond to the northeast starting hash.
 
 
 ### geohash.neighbor (hashstring, direction)
