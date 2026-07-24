@@ -220,26 +220,37 @@ var decode_bbox_int = function (hashInt, bitDepth) {
   maxLon = MAX_LON,
   minLon = MIN_LON;
 
-  var latBit = 0, lonBit = 0;
-  var step = bitDepth / 2;
+  // Geohash interleaves bits longitude-first, so for a given bitDepth there
+  // are ceil(bitDepth/2) longitude bits and floor(bitDepth/2) latitude bits.
+  // The previous single loop used `step = bitDepth / 2` and read one lon and
+  // one lat bit per iteration; for odd bitDepth that ran an extra iteration
+  // whose latitude bit position `((step-i)*2)-2` went NEGATIVE, and
+  // get_bit(bits, -1) always returns 0, halving maxLat once too many. That
+  // made the latitude bbox half the correct height for every odd bitDepth
+  // (e.g. any odd-length geohash string -> 5*L bits). Splitting the reads so
+  // every bit position is non-negative fixes odd bitDepth while keeping even
+  // bitDepth bit-identical (even bd: lonBits == latBits == bd/2, same
+  // positions and bisection order as before).
+  var lonBits = Math.ceil(bitDepth / 2);
+  var latBits = Math.floor(bitDepth / 2);
 
-  for (var i = 0; i < step; i++) {
-
-    lonBit = get_bit(hashInt, ((step - i) * 2) - 1);
-    latBit = get_bit(hashInt, ((step - i) * 2) - 2);
-
-    if (latBit === 0) {
-      maxLat = (maxLat + minLat) / 2;
-    }
-    else {
-      minLat = (maxLat + minLat) / 2;
-    }
-
+  for (var i = 0; i < lonBits; i++) {
+    var lonBit = get_bit(hashInt, bitDepth - 1 - (i * 2));
     if (lonBit === 0) {
       maxLon = (maxLon + minLon) / 2;
     }
     else {
       minLon = (maxLon + minLon) / 2;
+    }
+  }
+
+  for (var j = 0; j < latBits; j++) {
+    var latBit = get_bit(hashInt, bitDepth - 2 - (j * 2));
+    if (latBit === 0) {
+      maxLat = (maxLat + minLat) / 2;
+    }
+    else {
+      minLat = (maxLat + minLat) / 2;
     }
   }
   return [minLat, minLon, maxLat, maxLon];

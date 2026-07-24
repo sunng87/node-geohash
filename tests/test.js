@@ -166,4 +166,103 @@ exports.testBBoxesInt = function (test) {
   test.done();
 };
 
+// --- Regression tests for odd bitDepth integer decode (Fix A) ---
+// Geohash interleaves bits longitude-first, so a bitDepth of bd has
+// ceil(bd/2) longitude bits and floor(bd/2) latitude bits. Any odd-length
+// geohash string maps to an odd bitDepth (5*L), which previously produced a
+// latitude bbox half the correct height. These tests pin the integer path to
+// the library's own (chrisveness-cross-checked) string path.
+
+var BASE32 = '0123456789bcdefghjkmnpqrstuvwxyz';
+function strToInt(hashStr) {
+  var v = 0;
+  for (var i = 0; i < hashStr.length; i++) {
+    v = v * 32 + BASE32.indexOf(hashStr[i]);
+  }
+  return v;
+}
+function near(a, b, tol) { return Math.abs(a - b) <= tol; }
+
+// (a) All 32 single-char geohashes: decode_int(int(c), 5) must equal decode(c).
+exports.testOddBitDepthSingleCharDecodeInt = function (test) {
+  var chars = BASE32.split('');
+  for (var i = 0; i < chars.length; i++) {
+    var c = chars[i];
+    var ds = geohash.decode(c);
+    var di = geohash.decode_int(strToInt(c), 5);
+    test.ok(near(ds.latitude, di.latitude, 1e-9),
+      'char "' + c + '" lat str=' + ds.latitude + ' int=' + di.latitude);
+    test.ok(near(ds.longitude, di.longitude, 1e-9),
+      'char "' + c + '" lon str=' + ds.longitude + ' int=' + di.longitude);
+  }
+  test.done();
+};
+
+// (b) Odd vs even length prefixes: decode_bbox_int(int, 5*L) must match
+//     decode_bbox(str) for every L, including odd L (previously lat half).
+exports.testOddEvenPrefixBboxIntMatchesString = function (test) {
+  var sample = geohash.encode(37.8324, 112.5584, 12);
+  for (var L = 1; L <= 12; L++) {
+    var h = sample.substr(0, L);
+    var bd = 5 * L;
+    var sb = geohash.decode_bbox(h);
+    var ib = geohash.decode_bbox_int(strToInt(h), bd);
+    test.ok(near(sb[0], ib[0], 1e-9), 'L=' + L + ' minlat str=' + sb[0] + ' int=' + ib[0]);
+    test.ok(near(sb[1], ib[1], 1e-9), 'L=' + L + ' minlon str=' + sb[1] + ' int=' + ib[1]);
+    test.ok(near(sb[2], ib[2], 1e-9), 'L=' + L + ' maxlat str=' + sb[2] + ' int=' + ib[2]);
+    test.ok(near(sb[3], ib[3], 1e-9), 'L=' + L + ' maxlon str=' + sb[3] + ' int=' + ib[3]);
+  }
+  test.done();
+};
+
+// (c) neighbor_int at odd bitDepth must agree with the string neighbor.
+exports.testNeighborIntOddBitDepthConsistent = function (test) {
+  var base = 'j';
+  var ni = geohash.neighbor_int(strToInt(base), [1, 0], 5);
+  var ns = geohash.neighbor(base, [1, 0]);
+  var niLat = geohash.decode_int(ni, 5).latitude;
+  var nsLat = geohash.decode(ns).latitude;
+  test.ok(near(niLat, nsLat, 1e-6),
+    'neighbor_int lat=' + niLat + ' vs neighbor lat=' + nsLat);
+  // also a direct numeric guard: int("j")=17, north neighbor -> 19 ("m")
+  test.equal(ni, 19);
+  test.equal(ns, 'm');
+  test.done();
+};
+
+// (d) Even-bitDepth regression guard: cell sizes must equal the analytic
+//     180/2^(bd/2) (lat) and 360/2^(bd/2) (lon), unchanged by the fix.
+exports.testEvenBitDepthCellSizesUnchanged = function (test) {
+  for (var bd = 2; bd <= 52; bd += 2) {
+    var expLatH = 180 / Math.pow(2, bd / 2);
+    var expLonW = 360 / Math.pow(2, bd / 2);
+    var enc = geohash.encode_int(37.8324, 112.5584, bd);
+    var bb = geohash.decode_bbox_int(enc, bd);
+    test.ok(near(bb[2] - bb[0], expLatH, 1e-6),
+      'bd=' + bd + ' latH=' + (bb[2] - bb[0]) + ' exp=' + expLatH);
+    test.ok(near(bb[3] - bb[1], expLonW, 1e-6),
+      'bd=' + bd + ' lonW=' + (bb[3] - bb[1]) + ' exp=' + expLonW);
+  }
+  test.done();
+};
+
+// (e) Round-trip encode_int / decode_int for even bitDepth stays within one
+//     cell; also covers a couple of odd bitDepths now that they are correct.
+exports.testEncodeDecodeIntRoundTrip = function (test) {
+  var bds = [2, 4, 10, 25, 26, 50, 52, 5, 15, 25];
+  for (var i = 0; i < bds.length; i++) {
+    var bd = bds[i];
+    var lat = 37.8324, lon = 112.5584;
+    var enc = geohash.encode_int(lat, lon, bd);
+    var dec = geohash.decode_int(enc, bd);
+    var latErr = dec.error.latitude;
+    var lonErr = dec.error.longitude;
+    test.ok(near(dec.latitude, lat, latErr + 1e-9),
+      'bd=' + bd + ' lat=' + dec.latitude + ' exp~' + lat);
+    test.ok(near(dec.longitude, lon, lonErr + 1e-9),
+      'bd=' + bd + ' lon=' + dec.longitude + ' exp~' + lon);
+  }
+  test.done();
+};
+
 return exports;
