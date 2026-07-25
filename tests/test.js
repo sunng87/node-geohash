@@ -249,7 +249,7 @@ exports.testEvenBitDepthCellSizesUnchanged = function (test) {
 // (e) Round-trip encode_int / decode_int for even bitDepth stays within one
 //     cell; also covers a couple of odd bitDepths now that they are correct.
 exports.testEncodeDecodeIntRoundTrip = function (test) {
-  var bds = [2, 4, 10, 25, 26, 50, 52, 5, 15, 25];
+  var bds = [2, 4, 10, 25, 26, 50, 52, 5, 15];
   for (var i = 0; i < bds.length; i++) {
     var bd = bds[i];
     var lat = 37.8324, lon = 112.5584;
@@ -261,6 +261,49 @@ exports.testEncodeDecodeIntRoundTrip = function (test) {
       'bd=' + bd + ' lat=' + dec.latitude + ' exp~' + lat);
     test.ok(near(dec.longitude, lon, lonErr + 1e-9),
       'bd=' + bd + ' lon=' + dec.longitude + ' exp~' + lon);
+  }
+  test.done();
+};
+
+// (f) neighbors_int at odd bitDepth must agree with the string neighbors list
+//     (decoded centers), for every direction. These were fixed transitively via
+//     decode_int -> decode_bbox_int; this pins them directly.
+exports.testNeighborsIntOddBitDepthConsistent = function (test) {
+  var baseStr = geohash.encode(37.8324, 112.5584, 1); // odd length -> bd=5
+  var bd = 5;
+  var baseInt = strToInt(baseStr);
+  var nStr = geohash.neighbors(baseStr);   // [n, ne, e, se, s, sw, w, nw]
+  var nInt = geohash.neighbors_int(baseInt, bd);
+  test.equal(nStr.length, nInt.length, 'neighbor count mismatch');
+  for (var i = 0; i < nStr.length; i++) {
+    var ds = geohash.decode(nStr[i]);
+    var di = geohash.decode_int(nInt[i], bd);
+    test.ok(near(ds.latitude, di.latitude, 1e-9),
+      'idx=' + i + ' lat str=' + ds.latitude + ' int=' + di.latitude);
+    test.ok(near(ds.longitude, di.longitude, 1e-9),
+      'idx=' + i + ' lon str=' + ds.longitude + ' int=' + di.longitude);
+  }
+  test.done();
+};
+
+// (g) bboxes_int at odd bitDepth must return the same set of cells as the
+//     string bboxes() for the corresponding numberOfChars (bd = 5 * L).
+exports.testBBoxesIntOddBitDepthMatchesString = function (test) {
+  var bd = 5;
+  var numberOfChars = 1;
+  var minLat = 0, minLon = 0, maxLat = 80, maxLon = 120;
+  var intHashes = geohash.bboxes_int(minLat, minLon, maxLat, maxLon, bd);
+  var strHashes = geohash.bboxes(minLat, minLon, maxLat, maxLon, numberOfChars);
+  test.equal(strHashes.length, intHashes.length,
+    'count str=' + strHashes.length + ' int=' + intHashes.length);
+  function key(c) { return c.latitude.toFixed(6) + ',' + c.longitude.toFixed(6); }
+  var strKeys = {};
+  for (var i = 0; i < strHashes.length; i++) {
+    strKeys[key(geohash.decode(strHashes[i]))] = true;
+  }
+  for (var j = 0; j < intHashes.length; j++) {
+    var k = key(geohash.decode_int(intHashes[j], bd));
+    test.ok(strKeys[k], 'int cell ' + k + ' has no matching string cell');
   }
   test.done();
 };

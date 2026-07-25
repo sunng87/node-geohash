@@ -68,7 +68,7 @@ Note that integer precision is capped at 52bits in Javscript. These are just reg
 
 ### geohash.encode_int (latitude, longitude, bitDepth=52)
 
-Encode a pair of latitude and longitude values into a geohash integer. The third argument is optional, you can specify the `bitDepth` of this number, which affects the precision of the geohash but also **must be used consistently when decoding**. Bit depth must be even.
+Encode a pair of latitude and longitude values into a geohash integer. The third argument is optional, you can specify the `bitDepth` of this number, which affects the precision of the geohash but also **must be used consistently when decoding**. Both even and odd bit depths are supported; note that an odd-length geohash string corresponds to an odd `bitDepth` (`5` bits per character).
 
 
 ### geohash.decode_int (hashinteger, bitDepth=52)
