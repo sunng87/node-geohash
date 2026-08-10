@@ -8,8 +8,15 @@ exports.testEncodeBasic = function (test) {
   var hashString = geohash.encode(37.8324, 112.5584);
   test.equal(hashString, 'ww8p1r4t8');
 
+  hashString = geohash.encodeBase4(37.8324, 112.5584);
+  test.equal(hashString, '32130101110031302121101');
+
   hashString = geohash.encode(32, 117, 3);
   test.equal(hashString, 'wte');
+
+  hashString = geohash.encodeBase4(32, 117, 8);
+  test.equal(hashString, '32121123');
+
   test.done();
 };
 
